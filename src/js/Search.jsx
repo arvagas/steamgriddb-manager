@@ -70,12 +70,15 @@ class Search extends React.Component {
     this.setState({
       items: clonedItems,
     });
-
+    
     const downloadPromises = [];
 
     downloadPromises.push(Steam.addAsset(location.state.assetType, game.appid, item.url));
-    // Old app id is for Big Picture Mode
-    downloadPromises.push(Steam.addAsset(location.state.assetType, game.appidOld, item.url));
+    
+    // Add horizontalGrid BPM image for Non-Steam Games
+    if (game.appidold && location.state.assetType == 'horizontalGrid') {
+      downloadPromises.push(Steam.addAsset(location.state.assetType, game.appidold, item.url));
+    }
     
     Promise.all(downloadPromises).then(() => {
       clonedItems[itemIndex].downloading = false;
